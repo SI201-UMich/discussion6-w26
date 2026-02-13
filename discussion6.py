@@ -4,21 +4,15 @@ import csv
 
 class HorseRaces:
     def __init__(self, filename):
-        self.race_dict = self.load_results(filename)
+        self.race_dict = self.load_results(self.process_csv(filename))
 
-###############################################################################
-##### TASK 1
-###############################################################################
-    def load_results(self, f):
+    def process_csv(self, f):
         '''
         Parameters: 
             f, name or path or CSV file: string
 
         Returns:
-            nested dict structure from csv
-            outer keys are (str) horses, outer values are dicts
-            inner keys are (str) races, inner values are (int) race times
-            EXAMPLE: {'Special Week': {'Tenno Sho Fall': 16.5, 'Tenno Sho Spring': 16.3, 'Teio Sho': 17.0}}
+            list of lists
         '''
         table = []
 
@@ -39,13 +33,30 @@ class HorseRaces:
                 # Append the list of cells to the table
                 table.append(table_row)
         # print(table)
+        return table
 
-        # First row of the table is the header row
-        header = table[0]
+###############################################################################
+##### TASK 1
+###############################################################################
+    def load_results(self, table):
+        '''
+        Given the processed CSV (as a list of lists), populate a nested dictionary with the horse information.
 
-        # START CODING HERE
-        # Populate the nested dictionary
-        # Note: You will need to use float() to convert the race time from str to float
+        NOTE: You will need to use float() to convert the race time from str to float.
+
+        Parameters: 
+            table, a list of lists
+                inner lists are individual rows in the CSV
+                inner elements are the cells of each row
+                EXAMPLE: [["Horse", "Tenno Sho Fall", "Tenno Sho Spring", "Teio Sho"],
+                          ["Special Week", "16.5", "16.3", "17.0"]]
+
+        Returns:
+            nested dict structure from csv
+            outer keys are (str) horses, outer values are dicts
+            inner keys are (str) races, inner values are (int) race times
+            EXAMPLE: {'Special Week': {'Tenno Sho Fall': 16.5, 'Tenno Sho Spring': 16.3, 'Teio Sho': 17.0}}
+        '''
         pass
 
 ###############################################################################
@@ -55,7 +66,7 @@ class HorseRaces:
     def horse_fastest_race(self, horse):
         '''
         Given the name of a horse, return its fastest race and time.
-        If the horse does not exist, return 'None' and 999.0.
+        If the horse does not exist, return (None, 999.9)
 
         Parameters:
             horse, name of a race: str
@@ -76,11 +87,12 @@ class HorseRaces:
 
         Returns:
             A dictionary of tuples of each horse, with their fastest race and time.
+            EXAMPLE: {"Oguri Cap": ("Tenno Sho Fall", 16.6), "Mejiro McQueen": ("Tenno Sho Fall", 16.1)}
         '''
         pass
 
 ###############################################################################
-##### OPTIONAL: TASK 4
+##### TASK 4
 ###############################################################################
 
     def get_average_time(self):
@@ -89,6 +101,7 @@ class HorseRaces:
 
         Returns:
             A dictionary with each horse and their average time.
+            EXAMPLE: {'Gold Ship': 16.5, 'Daiwa Scarlet': 17.2}
         '''
         pass
 
@@ -110,7 +123,7 @@ class dis7_test(unittest.TestCase):
 
     def test_horse_fastest_race(self):
         nonexistent_horse = self.horse_races.horse_fastest_race('Bob')
-        self.assertEqual(nonexistent_horse[0], 'None')
+        self.assertEqual(nonexistent_horse[0], None)
         fastest_horse = self.horse_races.horse_fastest_race('Symboli Rudolf')
         self.assertEqual(fastest_horse[0], 'Teio Sho')
         self.assertAlmostEqual(fastest_horse[1], 14.8)
